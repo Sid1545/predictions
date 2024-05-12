@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Match Prediction Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h2>Cricket Match Prediction Form</h2>
+    <form id="predictionForm">
+        <label for="team1">Team 1:</label>
+        <input type="text" id="team1" name="team1" required>
+        
+        <label for="team2">Team 2:</label>
+        <input type="text" id="team2" name="team2" required>
+        
+        <label for="venue">Venue:</label>
+        <input type="text" id="venue" name="venue" required>
+        
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+        
+        <label for="predicted_score">Predicted First Innings Score:</label>
+        <input type="number" id="predicted_score" name="predicted_score" required>
+        
+        <input type="button" value="Submit" onclick="submitForm()">
+    </form>
+
+    <script>
+        function submitForm() {
+            var team1 = document.getElementById("team1").value;
+            var team2 = document.getElementById("team2").value;
+            var venue = document.getElementById("venue").value;
+            var date = document.getElementById("date").value;
+            var predicted_score = document.getElementById("predicted_score").value;
+
+            var matches = JSON.parse(localStorage.getItem("matches")) || [];
+
+            matches.push({
+                team1: team1,
+                team2: team2,
+                venue: venue,
+                date: date,
+                predicted_score: predicted_score
+            });
+
+            localStorage.setItem("matches", JSON.stringify(matches));
+
+            alert("Prediction submitted successfully!");
+        }
+    </script>
+</body>
+</html>

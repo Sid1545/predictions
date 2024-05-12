@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Match Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .matches {
+            list-style-type: none;
+            padding: 0;
+        }
+        .match {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+        }
+        .completed,
+        .upcoming {
+            display: none;
+        }
+        .link {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Cricket Match Dashboard</h2>
+    <div class="section">
+        <h3 class="section-title">Live Matches</h3>
+        <ul class="matches live" id="liveMatches"></ul>
+    </div>
+    <div class="section">
+        <h3 class="section-title" onclick="toggleSection('completed')">Completed Matches</h3>
+        <ul class="matches completed" id="completedMatches"></ul>
+        <p class="link" onclick="window.location.href = 'display.html';">View all completed matches</p>
+    </div>
+    <div class="section">
+        <h3 class="section-title" onclick="toggleSection('upcoming')">Upcoming Matches</h3>
+        <ul class="matches upcoming" id="upcomingMatches"></ul>
+    </div>
+
+    <script>
+        function loadMatches() {
+            var matches = JSON.parse(localStorage.getItem("matches")) || [];
+            var today = new Date().toISOString().split('T')[0];
+            var completedMatches = [];
+            var liveMatches = [];
+            var upcomingMatches = [];
+
+            matches.forEach(function(match) {
+                if (match.date < today) {
+                    completedMatches.push(match);
+                } else if (match.date === today) {
+                    liveMatches.push(match);
+                } else {
+                    upcomingMatches.push(match);
+                }
+            });
+
+            // Sort completedMatches by date in descending order
+            completedMatches.sort(function(a, b) {
+                return new Date(b.date) - new Date(a.date);
+            });
+
+            displayMatches(liveMatches, "liveMatches");
+            displayMatches(completedMatches.slice(0, 5), "completedMatches");
+            displayMatches(upcomingMatches, "upcomingMatches");
+        }
+
+        function displayMatches(matches, elementId) {
+            var matchesList = document.getElementById(elementId);
+            matchesList.innerHTML = "";
+            matches.forEach(function(match) {
+                var matchElement = document.createElement("li");
+                matchElement.classList.add("match");
+                matchElement.innerHTML = `
+                    <p><strong>Team 1:</strong> ${match.team1}</p>
+                    <p><strong>Team 2:</strong> ${match.team2}</p>
+                    <p><strong>Venue:</strong> ${match.venue}</p>
+                    <p><strong>Date:</strong> ${match.date}</p>
+                    <p><strong>Predicted First Innings Score:</strong> ${match.predicted_score}</p>
+                `;
+                matchesList.appendChild(matchElement);
+            });
+        }
+
+        function toggleSection(sectionId) {
+            var section = document.querySelector("." + sectionId);
+            section.style.display = (section.style.display === "none") ? "block" : "none";
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            loadMatches();
+        });
+    </script>
+</body>
+</html>
